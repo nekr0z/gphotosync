@@ -1,6 +1,8 @@
 #!/bin/sh
 
 source .env
+(cd $GOPATH/src/google.golang.org/api/photoslibrary/v1 && git apply $CI_PROJECT_DIR/patches/media-item-filename.patch)
+
 set -e 
 FLAGS="-ldflags \"-X main.GoogleClientId=$GOOGLE_CLIENT_ID -X main.GoogleClientSecret=$GOOGLE_CLIENT_SECRET\""
 

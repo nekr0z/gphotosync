@@ -11,6 +11,10 @@ build:
     - mkdir -p gitlab.com/$CI_PROJECT_NAMESPACE
     - cd gitlab.com/$CI_PROJECT_NAMESPACE
     - ln -s $CI_PROJECT_DIR
+    
+    - cd $GOPATH/src/google.golang.org/api/photoslibrary/v1
+    - git apply $CI_PROJECT_DIR/patches/media-item-filename.patch
+
     - cd $CI_PROJECT_NAME
   script:
     # Compile and name the binary as `hello`

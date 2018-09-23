@@ -2,7 +2,7 @@
 
 source .env
 
-set -e 
+set -xe 
 FLAGS="-ldflags \"-X main.GoogleClientId=$GOOGLE_CLIENT_ID -X main.GoogleClientSecret=$GOOGLE_CLIENT_SECRET\""
 
 mkdir -p builds

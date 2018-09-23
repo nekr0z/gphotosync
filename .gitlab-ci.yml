@@ -17,4 +17,4 @@ build:
 
   artifacts:
     paths:
-    - "builds/*"
+    - "cmd/sync/builds/*"

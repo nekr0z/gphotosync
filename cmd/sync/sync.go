@@ -68,6 +68,11 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 		if err != nil {
 			return err
 		}
+
+		err = os.Chtimes(mediaPath, remoteCreationTime, remoteCreationTime)
+		if err != nil {
+			return err
+		}
 	} else {
 		log.Printf("\"%s\" exists", mediaPath)
 	}

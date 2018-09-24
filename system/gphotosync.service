@@ -1,0 +1,10 @@
+[Unit]
+Description=Google Photos Sync service
+After=network-online.target
+
+[Service]
+EnvironmentFile=%h/.config/gphotosync.env
+ExecStart=/usr/local/bin/gphotosync --lib ${LIBRARY_PATH}
+
+[Install]
+WantedBy=multi-user.target

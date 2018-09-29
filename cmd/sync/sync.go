@@ -11,6 +11,7 @@ import (
 	"strconv"
 	"time"
 
+	"google.golang.org/api/googleapi"
 	photoslibrary "google.golang.org/api/photoslibrary/v1"
 )
 
@@ -102,7 +103,19 @@ func (lib *Library) Sync() error {
 	for {
 		res, err := mediaItemsService.Search(&photoslibrary.SearchMediaItemsRequest{PageToken: pageToken}).Do()
 		if err != nil {
-			return err
+			if apiError, ok := err.(*googleapi.Error); ok {
+				/// If the quota of requests to the Library API is exceeded, the API returns an error code 429 and a message that the project has exceeded the quota.
+				if apiError.Code == 429 {
+					time.Sleep(5 * time.Minute)
+					continue
+				}
+				return err
+			}
+		}
+
+		// no more photos there
+		if len(res.MediaItems) == 0 {
+			return nil
 		}
 
 		for _, mItem := range res.MediaItems {

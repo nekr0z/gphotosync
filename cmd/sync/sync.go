@@ -106,6 +106,7 @@ func (lib *Library) Sync() error {
 			if apiError, ok := err.(*googleapi.Error); ok {
 				/// If the quota of requests to the Library API is exceeded, the API returns an error code 429 and a message that the project has exceeded the quota.
 				if apiError.Code == 429 {
+					log.Printf("failed to get media items: %s", apiError.Message)
 					time.Sleep(5 * time.Minute)
 					continue
 				}

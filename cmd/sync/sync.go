@@ -116,6 +116,7 @@ func (lib *Library) Sync() error {
 
 		// no more photos there
 		if len(res.MediaItems) == 0 {
+			log.Printf("syncing is done")
 			return nil
 		}
 

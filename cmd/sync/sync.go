@@ -101,7 +101,7 @@ func (lib *Library) Sync() error {
 	pageToken := ""
 
 	for {
-		res, err := mediaItemsService.Search(&photoslibrary.SearchMediaItemsRequest{PageToken: pageToken}).Do()
+		res, err := mediaItemsService.Search(&photoslibrary.SearchMediaItemsRequest{PageToken: pageToken, PageSize: 100}).Do()
 		if err != nil {
 			if apiError, ok := err.(*googleapi.Error); ok {
 				/// If the quota of requests to the Library API is exceeded, the API returns an error code 429 and a message that the project has exceeded the quota.
@@ -118,6 +118,8 @@ func (lib *Library) Sync() error {
 		if len(res.MediaItems) == 0 {
 			log.Printf("syncing is done")
 			return nil
+		} else {
+			log.Printf("processing %d items", len(res.MediaItems))
 		}
 
 		for _, mItem := range res.MediaItems {

@@ -18,3 +18,4 @@ build:
   artifacts:
     paths:
     - "cmd/sync/builds/*"
+    - "system/gphotosync@.service"

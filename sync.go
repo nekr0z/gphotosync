@@ -65,7 +65,7 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 		mediaPath = mediaPath + "-" + strconv.FormatInt(stat.ModTime().UnixNano(), 16) + path.Ext(mediaPath)
 	}
 
-	if stat, err := os.Stat(mediaPath); os.IsNotExist(err) {
+	if _, err := os.Stat(mediaPath); os.IsNotExist(err) {
 		mediaURL := getDownloadUrl(mItem)
 
 		log.Printf("downloading \"%s\" to \"%s\"", mediaURL, mediaPath)

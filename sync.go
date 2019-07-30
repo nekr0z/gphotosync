@@ -55,7 +55,7 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 		return err
 	}
 
-	mediaPath := path.Join(lib.Path, strconv.Itoa(remoteCreationTime.Year()), strconv.Itoa(int(remoteCreationTime.Month())), mItem.Filename)
+	mediaPath := path.Join(lib.Path, strconv.Itoa(remoteCreationTime.Year()), fmt.Sprintf("%02d", remoteCreationTime.Month()), mItem.Filename)
 
 	if err := os.MkdirAll(path.Dir(mediaPath), 0755); err != nil {
 		return err

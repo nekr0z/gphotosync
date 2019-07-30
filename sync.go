@@ -61,7 +61,11 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 		return err
 	}
 
-	if stat, err := os.Stat(mediaPath); os.IsNotExist(err) || (os.IsExist(err) && stat.ModTime().UnixNano() <= remoteCreationTime.UnixNano()) {
+	if stat, err := os.Stat(mediaPath); os.IsExist(err) && stat.ModTime().UnixNano() != remoteCreationTime.UnixNano() {
+		mediaPath = mediaPath + "-" + strconv.FormatInt(stat.ModTime().UnixNano(), 16) + path.Ext(mediaPath)
+	}
+
+	if stat, err := os.Stat(mediaPath); os.IsNotExist(err) {
 		mediaURL := getDownloadUrl(mItem)
 
 		log.Printf("downloading \"%s\" to \"%s\"", mediaURL, mediaPath)

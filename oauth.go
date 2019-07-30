@@ -11,9 +11,9 @@ import (
 	"net/http"
 	"os"
 
+	photoslibrary "github.com/nekr0z/gphotoslibrary"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
-	photoslibrary "google.golang.org/api/photoslibrary/v1"
 )
 
 // NewOAuthClient creates a new http.Client with a bearer access token

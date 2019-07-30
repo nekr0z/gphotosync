@@ -11,8 +11,8 @@ import (
 	"strconv"
 	"time"
 
+	photoslibrary "github.com/nekr0z/gphotoslibrary"
 	"google.golang.org/api/googleapi"
-	photoslibrary "google.golang.org/api/photoslibrary/v1"
 )
 
 func DownloadFile(url string, path string) error {

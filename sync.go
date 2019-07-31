@@ -118,19 +118,19 @@ func (lib *Library) Sync() error {
 			}
 		}
 
-		// no more photos there
-		if len(res.MediaItems) == 0 {
-			log.Printf("syncing is done")
-			return nil
-		} else {
-			log.Printf("processing %d items", len(res.MediaItems))
-		}
-
 		for _, mItem := range res.MediaItems {
 			err = lib.SyncMediaItem(mItem)
 			if err != nil {
 				log.Printf("failed to sync item \"%s\": %s", mItem.Id, err)
 			}
+		}
+
+		// no more photos there
+		if res.NextPageToken == "" {
+			log.Printf("syncing is done")
+			return nil
+		} else {
+			log.Printf("processing %d items", len(res.MediaItems))
 		}
 
 		pageToken = res.NextPageToken

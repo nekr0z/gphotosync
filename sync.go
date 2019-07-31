@@ -118,6 +118,7 @@ func (lib *Library) Sync() error {
 			}
 		}
 
+		log.Printf("processing %d items", len(res.MediaItems))
 		for _, mItem := range res.MediaItems {
 			err = lib.SyncMediaItem(mItem)
 			if err != nil {
@@ -130,7 +131,7 @@ func (lib *Library) Sync() error {
 			log.Printf("syncing is done")
 			return nil
 		} else {
-			log.Printf("processing %d items", len(res.MediaItems))
+			log.Printf("requesting next page")
 		}
 
 		pageToken = res.NextPageToken

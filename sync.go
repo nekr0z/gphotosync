@@ -62,7 +62,7 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 	}
 
 	if stat, err := os.Stat(mediaPath); os.IsNotExist(err) == false && stat.ModTime().UnixNano() != remoteCreationTime.UnixNano() {
-		mediaPath = mediaPath + "-" + strconv.FormatInt(stat.ModTime().UnixNano(), 16) + path.Ext(mediaPath)
+		mediaPath = mediaPath + "-" + strconv.FormatInt(remoteCreationTime.UnixNano(), 16) + path.Ext(mediaPath)
 	}
 
 	if _, err := os.Stat(mediaPath); os.IsNotExist(err) {

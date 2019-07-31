@@ -5,8 +5,11 @@ import (
 	"log"
 )
 
-var GoogleClientId string
-var GoogleClientSecret string
+var (
+	GoogleClientId     string
+	GoogleClientSecret string
+	version            string = "custom-build"
+)
 
 func main() {
 	localLibArg := flag.String("lib", "", "local library path")

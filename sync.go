@@ -61,6 +61,8 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 		return err
 	}
 
+	// multiple items with same filename can exist in remote
+	// we try to mitigate it by adding timestamp to local filename
 	if stat, err := os.Stat(mediaPath); os.IsNotExist(err) == false && stat.ModTime().UnixNano() != remoteCreationTime.UnixNano() {
 		mediaPath = mediaPath + "-" + strconv.FormatInt(remoteCreationTime.UnixNano(), 16) + path.Ext(mediaPath)
 	}
@@ -126,7 +128,7 @@ func (lib *Library) Sync() error {
 			}
 		}
 
-		// no more photos there
+		// if NextPageToken is empty, we reached the last page of items list
 		if res.NextPageToken == "" {
 			log.Printf("syncing is done")
 			return nil

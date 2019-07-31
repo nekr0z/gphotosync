@@ -29,7 +29,7 @@ func NewOAuthToken(ctx context.Context, clientID string, clientSecret string) (*
 		return nil, err
 	}
 	authCodeURL := config.AuthCodeURL(state)
-	fmt.Printf("Open %s", authCodeURL)
+	fmt.Printf("Open %s\n", authCodeURL)
 	fmt.Print("Enter code: ")
 
 	var authCode string

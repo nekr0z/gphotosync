@@ -70,7 +70,7 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 	if _, err := os.Stat(mediaPath); os.IsNotExist(err) {
 		mediaURL := getDownloadUrl(mItem)
 
-		fmt.Printf("downloading \"%s\" to \"%s\"", mediaURL, mediaPath)
+		fmt.Printf("downloading \"%s\" to \"%s\"\n", mediaURL, mediaPath)
 		err := DownloadFile(mediaURL, mediaPath)
 		if err != nil {
 			return err
@@ -81,7 +81,7 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 			return err
 		}
 	} else {
-		fmt.Printf("\"%s\" exists", mediaPath)
+		fmt.Printf("\"%s\" exists\n", mediaPath)
 	}
 
 	return nil
@@ -120,7 +120,7 @@ func (lib *Library) Sync() error {
 			}
 		}
 
-		fmt.Printf("processing %d items", len(res.MediaItems))
+		fmt.Printf("processing %d items\n", len(res.MediaItems))
 		for _, mItem := range res.MediaItems {
 			err = lib.SyncMediaItem(mItem)
 			if err != nil {
@@ -130,10 +130,10 @@ func (lib *Library) Sync() error {
 
 		// if NextPageToken is empty, we reached the last page of items list
 		if res.NextPageToken == "" {
-			fmt.Printf("syncing is done")
+			fmt.Println("syncing is done")
 			return nil
 		} else {
-			fmt.Printf("requesting next page")
+			fmt.Println("requesting next page")
 		}
 
 		pageToken = res.NextPageToken

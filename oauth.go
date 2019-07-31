@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
 
@@ -30,7 +29,7 @@ func NewOAuthToken(ctx context.Context, clientID string, clientSecret string) (*
 		return nil, err
 	}
 	authCodeURL := config.AuthCodeURL(state)
-	log.Printf("Open %s", authCodeURL)
+	fmt.Printf("Open %s", authCodeURL)
 	fmt.Print("Enter code: ")
 
 	var authCode string
@@ -82,7 +81,7 @@ func NewOAuthClient(ctx context.Context, clientID, clientSecret, tokenPath strin
 		if err != nil {
 			return nil, err
 		}
-		log.Printf("read a token from \"%s\": %s %s", tokenPath, GoogleClientId, GoogleClientSecret)
+		fmt.Printf("read a token from \"%s\": %s %s", tokenPath, GoogleClientId, GoogleClientSecret)
 		return NewOAuthClientFromToken(ctx, clientID, clientSecret, token)
 	}
 }

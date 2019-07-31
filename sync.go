@@ -105,6 +105,7 @@ func (lib *Library) Sync() error {
 
 	mediaItemsService := photoslibrary.NewMediaItemsService(photoslibraryService)
 	pageToken := ""
+	waitTime := 1 * time.Minute
 
 	for {
 		res, err := mediaItemsService.Search(&photoslibrary.SearchMediaItemsRequest{PageToken: pageToken, PageSize: 100}).Do()
@@ -113,7 +114,8 @@ func (lib *Library) Sync() error {
 				/// If the quota of requests to the Library API is exceeded, the API returns an error code 429 and a message that the project has exceeded the quota.
 				if apiError.Code == 429 {
 					log.Printf("failed to get media items: %s", apiError.Message)
-					time.Sleep(5 * time.Minute)
+					time.Sleep(waitTime)
+					waitTime = waitTime * 2
 					continue
 				}
 				return err
@@ -137,5 +139,6 @@ func (lib *Library) Sync() error {
 		}
 
 		pageToken = res.NextPageToken
+		waitTime = 1 * time.Minute
 	}
 }

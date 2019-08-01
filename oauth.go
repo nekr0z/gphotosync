@@ -31,6 +31,11 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
+type credentials struct {
+	id     string
+	secret string
+}
+
 // NewOAuthClient creates a new http.Client with a bearer access token
 func NewOAuthToken(ctx context.Context, clientID string, clientSecret string) (*oauth2.Token, error) {
 	config := &oauth2.Config{
@@ -108,4 +113,23 @@ func generateOAuthState() (string, error) {
 		return "", err
 	}
 	return fmt.Sprintf("%x", n), nil
+}
+
+func readSecret(file string, cr *credentials) error {
+	data, err := ioutil.ReadFile(file)
+	if err != nil {
+		return err
+	}
+
+	var f map[string]interface{}
+	err = json.Unmarshal(data, &f)
+	if err != nil {
+		return err
+	}
+
+	cred := f["installed"].(map[string]interface{})
+
+	cr.id = cred["client_id"].(string)
+	cr.secret = cred["client_secret"].(string)
+	return nil
 }

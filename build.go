@@ -84,7 +84,7 @@ func buildBinary(version string, t int64) {
 	if err != nil {
 		fmt.Printf("couldn't read credentials from .client_secret.json: %s\n", err)
 	}
-	cmdline := fmt.Sprintf("go build -ldflags \"-X main.version=%s -X main.GoogleClientId=%s -X main.GoogleClientSecret=%s\" -v", version, cred.id, cred.secret)
+	cmdline := fmt.Sprintf("go build -ldflags \"-X main.version=%s -X main.googleClientId=%s -X main.googleClientSecret=%s\" -v", version, cred.id, cred.secret)
 	cmd := exec.Command("bash", "-c", cmdline)
 	if err := cmd.Run(); err != nil {
 		log.Fatalln("failed to build binary")

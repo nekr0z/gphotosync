@@ -114,7 +114,7 @@ func (lib *Library) GetTokenPath() string {
 func (lib *Library) Sync() error {
 	ctx := context.Background()
 
-	oauthClient, err := NewOAuthClient(ctx, GoogleClientId, GoogleClientSecret, lib.GetTokenPath())
+	oauthClient, err := NewOAuthClient(ctx, googleClientId, googleClientSecret, lib.GetTokenPath())
 	if err != nil {
 		return err
 	}

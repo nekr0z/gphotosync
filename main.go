@@ -26,8 +26,8 @@ import (
 )
 
 var (
-	GoogleClientId     string
-	GoogleClientSecret string
+	googleClientId     string
+	googleClientSecret string
 	version            string = "custom-build"
 )
 
@@ -47,11 +47,11 @@ func main() {
 		fmt.Printf("couldn't read credentials from .client_secret.json: %s\n", err)
 	} else {
 		fmt.Println("using custom credentials")
-		GoogleClientId = cred.id
-		GoogleClientSecret = cred.secret
+		googleClientId = cred.id
+		googleClientSecret = cred.secret
 	}
 
-	if GoogleClientId == "" || GoogleClientSecret == "" {
+	if googleClientId == "" || googleClientSecret == "" {
 		log.Fatal("no credentials available, can not continue")
 	}
 

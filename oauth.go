@@ -97,7 +97,7 @@ func NewOAuthClient(ctx context.Context, clientID, clientSecret, tokenPath strin
 		if err != nil {
 			return nil, err
 		}
-		fmt.Printf("read a token from \"%s\": %s %s\n", tokenPath, GoogleClientId, GoogleClientSecret)
+		fmt.Printf("read a token from \"%s\": %s %s\n", tokenPath, googleClientId, googleClientSecret)
 		return NewOAuthClientFromToken(ctx, clientID, clientSecret, token)
 	}
 }

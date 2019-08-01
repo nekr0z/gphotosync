@@ -40,6 +40,10 @@ You can use your own project's credentials for authentification: create a projec
 ```
 $ ./build.sh
 ```
+or, if you're running a non-proper-shell-capable OS (i.e. Windows)
+```
+go run build.go oauth.go
+```
 If you want authentification credentials compiled in, have a `.client_secret.json` in repository directory at compile time (see [Authentification](#authentification) section for details).
 
 ## Credits

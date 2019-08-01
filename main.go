@@ -42,7 +42,7 @@ func main() {
 		id:     "",
 		secret: "",
 	}
-	err := readSecret(path.Join(*localLibArg, ".client_secret.json"), &cred)
+	err := ReadSecretJSON(path.Join(*localLibArg, ".client_secret.json"), &cred)
 	if err != nil {
 		fmt.Printf("couldn't read credentials from .client_secret.json: %s\n", err)
 	} else {

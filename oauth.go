@@ -115,7 +115,7 @@ func generateOAuthState() (string, error) {
 	return fmt.Sprintf("%x", n), nil
 }
 
-func readSecret(file string, cr *Credentials) error {
+func ReadSecretJSON(file string, cr *Credentials) error {
 	data, err := ioutil.ReadFile(file)
 	if err != nil {
 		return err

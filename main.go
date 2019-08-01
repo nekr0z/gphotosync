@@ -4,7 +4,9 @@ import (
 	"flag"
 	"fmt"
 	"log"
+	"math/rand"
 	"path"
+	"time"
 )
 
 var (
@@ -36,6 +38,14 @@ func main() {
 	if GoogleClientId == "" || GoogleClientSecret == "" {
 		log.Fatal("no credentials available, can not continue")
 	}
+
+	// need to sleep for random number of milliseconds so as not to overload Google API
+	// will sleep between 0 and 1 minute
+	rand.Seed(time.Now().UnixNano())
+	n := rand.Intn(60000)
+	fmt.Printf("Waiting for about %d seconds...\n", (n / 1000))
+	time.Sleep(time.Duration(n) * time.Millisecond)
+	fmt.Println("Ready to start now")
 
 	if err := lib.Sync(); err != nil {
 		log.Fatal(err)

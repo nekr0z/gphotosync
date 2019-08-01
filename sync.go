@@ -31,6 +31,10 @@ import (
 	"google.golang.org/api/googleapi"
 )
 
+type Library struct {
+	Path string
+}
+
 func DownloadFile(url string, path string) error {
 
 	// Create the file

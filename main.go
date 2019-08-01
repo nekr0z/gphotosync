@@ -33,6 +33,10 @@ func main() {
 		GoogleClientSecret = cred.secret
 	}
 
+	if GoogleClientId == "" || GoogleClientSecret == "" {
+		log.Fatal("no credentials available, can not continue")
+	}
+
 	if err := lib.Sync(); err != nil {
 		log.Fatal(err)
 	}

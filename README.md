@@ -5,6 +5,8 @@ This app is a fork of [Denis Vashchuk's project](https://gitlab.com/denis4net/gp
 
 ##### Table of Contents
 * [How it works](#how-it-works)
+* [Authentification](#authentification)
+* [Building the app](#building-the-app)
 * [Credits](#credits)
 
 ## How it works
@@ -30,6 +32,15 @@ This app is a fork of [Denis Vashchuk's project](https://gitlab.com/denis4net/gp
 ...etc
          
 ```
+
+## Authentification
+You can use your own project's credentials for authentification: create a project using Photos Library API in [Google Developers Console](https://console.developers.google.com), download JSON credentials file from ID page, rename it to `.client_secret.json` and put in the directory where your local photos library will be downloaded. If no `.client_secret.json` is found in the working directory, the credentials supplied at build time will be used.
+
+## Building the app
+```
+$ ./build.sh
+```
+If you want authentification credentials compiled in, have a `.client_secret.json` in repository directory at compile time (see [Authentification](#authentification) section for details).
 
 ## Credits
 This software includes the following software or parts thereof:

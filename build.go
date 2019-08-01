@@ -76,11 +76,11 @@ func main() {
 }
 
 func buildBinary(version string, t int64) {
-	cred := Credentials{
+	cred := credentials{
 		id:     "",
 		secret: "",
 	}
-	err := ReadSecret(".client_secret.json", &cred)
+	err := readSecret(".client_secret.json", &cred)
 	if err != nil {
 		fmt.Printf("couldn't read credentials from .client_secret.json: %s\n", err)
 	}

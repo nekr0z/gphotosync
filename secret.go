@@ -20,12 +20,12 @@ import (
 	"io/ioutil"
 )
 
-type Credentials struct {
+type credentials struct {
 	id     string
 	secret string
 }
 
-func ReadSecret(file string, cr *Credentials) error {
+func readSecret(file string, cr *credentials) error {
 	data, err := ioutil.ReadFile(file)
 	if err != nil {
 		return err

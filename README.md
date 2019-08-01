@@ -1,5 +1,5 @@
 # gphotosync
-An app to download pictures and videos stored in  your Google Photos.
+An app to download pictures and videos stored in your Google Photos.
 
 This app is a fork of [Denis Vashchuk's project](https://gitlab.com/denis4net/gphotosync).
 
@@ -17,11 +17,11 @@ This app is a fork of [Denis Vashchuk's project](https://gitlab.com/denis4net/gp
 |  |  +-- 01.jpg
 |  |  +-- 02.jpg
 |  |  +-- 20190704.JPG
-|  +-- 06/
-|  |  +-- VIDEO.MPG
-|  |  +-- VIDEO.MPG-abbadfed.MPG
-|  |  +-- VIDEO.MPG-abba09d0.MPG
 |  +-- 05/
+|  |  +-- VIDEO.MPG
+|  |  +-- VIDEO.MPG-159b90e8a152aa00.MPG
+|  |  +-- VIDEO.MPG-159e8e0cdc16be00.MPG
+|  +-- 01/
 |     +-- IMG512.JPG
 +-- 2018/
 |  +-- 12/

@@ -7,6 +7,7 @@ This app is a fork of [Denis Vashchuk's project](https://gitlab.com/denis4net/gp
 * [How it works](#how-it-works)
 * [Authentification](#authentification)
 * [Building the app](#building-the-app)
+* [Privacy considerations](#privacy-considerations)
 * [Credits](#credits)
 
 ## How it works
@@ -45,6 +46,9 @@ or, if you're running a non-proper-shell-capable OS (i.e. Windows)
 go run build.go oauth.go
 ```
 If you want authentification credentials compiled in, have a `.client_secret.json` in repository directory at compile time (see [Authentification](#authentification) section for details).
+
+## Privacy considerations
+If you're using the precompiled version of the app with builtin project credentials, the activity of your copy of the app will be included in what I see in my Google Developer Console (it shows the cumulative activity such as number of requests per hour or day, median delay in serving those requests, and so on; I'm not aware of any way to see any personal or personalized data there). Other than that no one (but Google and your ISP or VPN provider, of course) has any way to have any access to your stuff or collect any data about how you are using it. Hey, you can read the source code and see for yourself what it does, and you can recompile the code yourself just to make sure!
 
 ## Credits
 This software includes the following software or parts thereof:

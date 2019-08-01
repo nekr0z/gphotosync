@@ -37,6 +37,8 @@ func main() {
 
 	lib := Library{*localLibArg}
 
+	fmt.Printf("gphotosync version %s\n", version)
+
 	// if .client_secret.json exists in local lib path, use those credentials
 	cred := Credentials{
 		ID:     googleClientId,

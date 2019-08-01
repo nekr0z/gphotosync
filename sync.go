@@ -111,10 +111,10 @@ func (lib *Library) GetTokenPath() string {
 	return path.Join(lib.Path, ".token.json")
 }
 
-func (lib *Library) Sync() error {
+func (lib *Library) Sync(cred Credentials) error {
 	ctx := context.Background()
 
-	oauthClient, err := NewOAuthClient(ctx, googleClientId, googleClientSecret, lib.GetTokenPath())
+	oauthClient, err := NewOAuthClient(ctx, cred.id, cred.secret, lib.GetTokenPath())
 	if err != nil {
 		return err
 	}

@@ -39,19 +39,17 @@ func main() {
 
 	// if .client_secret.json exists in local lib path, use those credentials
 	cred := Credentials{
-		id:     "",
-		secret: "",
+		id:     googleClientId,
+		secret: googleClientSecret,
 	}
 	err := ReadSecretJSON(path.Join(*localLibArg, ".client_secret.json"), &cred)
 	if err != nil {
 		fmt.Printf("couldn't read credentials from .client_secret.json: %s\n", err)
 	} else {
 		fmt.Println("using custom credentials")
-		googleClientId = cred.id
-		googleClientSecret = cred.secret
 	}
 
-	if googleClientId == "" || googleClientSecret == "" {
+	if cred.id == "" || cred.secret == "" {
 		log.Fatal("no credentials available, can not continue")
 	}
 
@@ -63,7 +61,7 @@ func main() {
 	time.Sleep(time.Duration(n) * time.Millisecond)
 	fmt.Println("Ready to start now")
 
-	if err := lib.Sync(); err != nil {
+	if err := lib.Sync(cred); err != nil {
 		log.Fatal(err)
 	}
 }

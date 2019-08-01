@@ -1,2 +1,2 @@
 #!/bin/bash
-go run build.go secret.go 
+go run build.go secret.go $* 

@@ -17,7 +17,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 )
 
@@ -26,7 +25,7 @@ type Credentials struct {
 	secret string
 }
 
-func readSecret(file string, cr *Credentials) error {
+func ReadSecret(file string, cr *Credentials) error {
 	data, err := ioutil.ReadFile(file)
 	if err != nil {
 		return err
@@ -43,18 +42,4 @@ func readSecret(file string, cr *Credentials) error {
 	cr.id = cred["client_id"].(string)
 	cr.secret = cred["client_secret"].(string)
 	return nil
-}
-
-func main() {
-	cred := Credentials{
-		id:     "",
-		secret: "",
-	}
-	err := readSecret(".client_secret.json", &cred)
-	if err != nil {
-		fmt.Println(err)
-	} else {
-		fmt.Printf("ID is %s\n", cred.id)
-		fmt.Printf("Secret is %s\n", cred.secret)
-	}
 }

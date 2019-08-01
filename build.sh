@@ -1,3 +1,2 @@
 #!/bin/bash
-source ./.env
-go build -ldflags "-X main.GoogleClientId=$GOOGLE_CLIENT_ID -X main.GoogleClientSecret=$GOOGLE_CLIENT_SECRET" -v
+go run build.go secret.go 

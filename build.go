@@ -28,6 +28,7 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
+	"runtime"
 	"strconv"
 	"time"
 )
@@ -38,38 +39,86 @@ type packFile struct {
 	mod os.FileMode
 }
 
+type target struct {
+	goos   string
+	goarch string
+}
+
 const appName = "gphotosync"
 
 var (
-	filename  string
-	keyID     string = "466F4F38E60211B0"
-	packFiles        = []packFile{
+	filename          string
+	binName           string
+	goos              string
+	goarch            string
+	keyID             string = "466F4F38E60211B0"
+	version           string
+	btime             int64
+	packFilesRequired = []packFile{
 		{src: "LICENSE", dst: "LICENSE", mod: 0644},
 		{src: "README.md", dst: "README.md", mod: 0644},
 		{src: "SOURCE.txt", dst: "SOURCE.txt", mod: 0644},
+	}
+	packFiles = []packFile{}
+	targets   = []target{
+		{goos: "linux", goarch: "386"},
+		{goos: "linux", goarch: "amd64"},
+		{goos: "linux", goarch: "arm"},
+		{goos: "windows", goarch: "386"},
+		{goos: "windows", goarch: "amd64"},
+		{goos: "darwin", goarch: "amd64"},
 	}
 )
 
 func main() {
 	sign := flag.Bool("s", false, "sign binary")
-	tar := flag.Bool("t", false, "generate tar.gz")
+	tar := flag.Bool("t", false, "generate archive")
+	buildAll := flag.Bool("a", false, "build archives for all supported systems")
+	flag.StringVar(&goos, "goos", runtime.GOOS, "GOOS value")
+	flag.StringVar(&goarch, "goarch", runtime.GOARCH, "GOARCH value")
 	flag.Parse()
-	version := getVersion()
-	btime := buildTime()
+	version = getVersion()
+	btime = buildTime()
+	if *buildAll {
+		*tar = true
+	}
 	if *tar {
 		*sign = true
 	}
 
-	fmt.Printf("Building version %s\n", version)
+	if *buildAll != true {
+		targets = []target{
+			{goos: goos, goarch: goarch},
+		}
+	}
+	for _, tgt := range targets {
+		packFiles = nil
+		for _, pf := range packFilesRequired {
+			packFiles = append(packFiles, pf)
+		}
+		build(tgt, *sign, *tar)
+	}
+}
+
+func build(tgt target, sign bool, tar bool) {
+	fmt.Printf("Building version %s for %s-%s\n", version, tgt.goos, tgt.goarch)
 	fmt.Println("Building as of", time.Unix(btime, 0))
+
+	if tgt.goos == "windows" {
+		binName = appName + ".exe"
+	} else {
+		binName = appName
+	}
+	os.Setenv("GOOS", tgt.goos)
+	os.Setenv("GOARCH", tgt.goarch)
 	buildBinary(version, btime)
 
-	if *sign {
-		signFile(appName, keyID)
+	if sign {
+		signFile(binName, keyID)
 	}
 
-	if *tar {
-		filename = appName + "-amd64-" + version
+	if tar {
+		filename = fmt.Sprintf("%s-%s-%s-%s", appName, tgt.goos, tgt.goarch, version)
 		buildTar()
 		fmt.Println("archive", filename, "created")
 	}
@@ -89,8 +138,8 @@ func buildBinary(version string, t int64) {
 	if err := cmd.Run(); err != nil {
 		log.Fatalln("failed to build binary")
 	}
-	setFileTime(appName, t)
-	packFiles = append(packFiles, packFile{appName, appName, 0755})
+	setFileTime(binName, t)
+	packFiles = append(packFiles, packFile{binName, binName, 0755})
 }
 
 func buildTar() {
@@ -160,7 +209,7 @@ func signFile(f string, k string) {
 		filename = filename + "-unsigned"
 	} else {
 		fmt.Println(f, "successfully signed with key", k)
-		packFiles = append(packFiles, packFile{appName + ".sig", appName + ".sig", 0644})
+		packFiles = append(packFiles, packFile{binName + ".sig", binName + ".sig", 0644})
 	}
 }
 

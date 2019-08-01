@@ -5,6 +5,7 @@ This app is a fork of [Denis Vashchuk's project](https://gitlab.com/denis4net/gp
 
 ##### Table of Contents
 * [How it works](#how-it-works)
+  * [Usage](#usage)
 * [Authentification](#authentification)
 * [Building the app](#building-the-app)
 * [Privacy considerations](#privacy-considerations)
@@ -31,8 +32,11 @@ This app is a fork of [Denis Vashchuk's project](https://gitlab.com/denis4net/gp
 |     +-- 0001.jpg
 |     +-- 0004.jpg
 ...etc
-         
 ```
+### Usage
+If you are planning to use the app for scheduled backups (which is totally OK), please consider the following:
+* It's not a good idea to schedule these backups to run on the hour (i.e. at 3:00, 10:00, 17:00, etc.), and it's even worse to schedule them for midnight. If enough people do that, Google servers will have to process a lot of requests from all of us at the same very second; eventially Google will ban the API key. The app already has a random delay (between 0 and 60 seconds) before it starts, but you can help things more if you schedule the runs for some random minute of the hour.
+* If the limit for Google API requests per day is reached, the app will pause for a minute before retrying to request more files, then for 2 minutes, then for 4 minutes, and so on, and so on. If a lot of users use the same pre-compiled project key, the delays can get significant, so it's a good idea to use some kind of blocking so that your new backup doesn't start before the previous one is finished. Linux users are advised to use `setlock` in their `cron` jobs.
 
 ## Authentification
 You can use your own project's credentials for authentification: create a project using Photos Library API in [Google Developers Console](https://console.developers.google.com), download JSON credentials file from ID page, rename it to `.client_secret.json` and put in the directory where your local photos library will be downloaded. If no `.client_secret.json` is found in the working directory, the credentials supplied at build time will be used.

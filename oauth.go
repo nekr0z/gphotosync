@@ -31,7 +31,7 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
-type credentials struct {
+type Credentials struct {
 	id     string
 	secret string
 }
@@ -115,7 +115,7 @@ func generateOAuthState() (string, error) {
 	return fmt.Sprintf("%x", n), nil
 }
 
-func readSecret(file string, cr *credentials) error {
+func readSecret(file string, cr *Credentials) error {
 	data, err := ioutil.ReadFile(file)
 	if err != nil {
 		return err

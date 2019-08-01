@@ -76,7 +76,7 @@ func main() {
 }
 
 func buildBinary(version string, t int64) {
-	cred := credentials{
+	cred := Credentials{
 		id:     "",
 		secret: "",
 	}

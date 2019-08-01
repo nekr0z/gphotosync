@@ -38,7 +38,7 @@ func main() {
 	lib := Library{*localLibArg}
 
 	// if .client_secret.json exists in local lib path, use those credentials
-	cred := credentials{
+	cred := Credentials{
 		id:     "",
 		secret: "",
 	}

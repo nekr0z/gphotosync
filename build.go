@@ -77,14 +77,14 @@ func main() {
 
 func buildBinary(version string, t int64) {
 	cred := Credentials{
-		id:     "",
-		secret: "",
+		ID:     "",
+		Secret: "",
 	}
 	err := ReadSecretJSON(".client_secret.json", &cred)
 	if err != nil {
 		fmt.Printf("couldn't read credentials from .client_secret.json: %s\n", err)
 	}
-	cmdline := fmt.Sprintf("go build -ldflags \"-X main.version=%s -X main.googleClientId=%s -X main.googleClientSecret=%s\" -v", version, cred.id, cred.secret)
+	cmdline := fmt.Sprintf("go build -ldflags \"-X main.version=%s -X main.googleClientId=%s -X main.googleClientSecret=%s\" -v", version, cred.ID, cred.Secret)
 	cmd := exec.Command("bash", "-c", cmdline)
 	if err := cmd.Run(); err != nil {
 		log.Fatalln("failed to build binary")

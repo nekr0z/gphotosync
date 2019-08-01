@@ -114,7 +114,7 @@ func (lib *Library) GetTokenPath() string {
 func (lib *Library) Sync(cred Credentials) error {
 	ctx := context.Background()
 
-	oauthClient, err := NewOAuthClient(ctx, cred.id, cred.secret, lib.GetTokenPath())
+	oauthClient, err := NewOAuthClient(ctx, cred.ID, cred.Secret, lib.GetTokenPath())
 	if err != nil {
 		return err
 	}

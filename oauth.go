@@ -32,8 +32,8 @@ import (
 )
 
 type Credentials struct {
-	id     string
-	secret string
+	ID     string
+	Secret string
 }
 
 // NewOAuthClient creates a new http.Client with a bearer access token
@@ -129,7 +129,7 @@ func ReadSecretJSON(file string, cr *Credentials) error {
 
 	cred := f["installed"].(map[string]interface{})
 
-	cr.id = cred["client_id"].(string)
-	cr.secret = cred["client_secret"].(string)
+	cr.ID = cred["client_id"].(string)
+	cr.Secret = cred["client_secret"].(string)
 	return nil
 }

@@ -33,6 +33,13 @@ const (
 	githubRepo string = "gphotosync"
 )
 
+var (
+	filesToRelease = [...]string{
+		"./*.tar.gz",
+		"./*.zip",
+	}
+)
+
 func main() {
 	flag.Parse()
 	if os.Getenv("GITHUB_TOKEN") == "" {
@@ -119,9 +126,13 @@ func process(version string) {
 	}
 
 	// release packages
-	fileNames, err := filepath.Glob("./*.tar.gz")
-	if err != nil {
-		log.Fatalln(err)
+	var fileNames []string
+	for _, glob := range filesToRelease {
+		fn, err := filepath.Glob(glob)
+		if err != nil {
+			log.Fatalln(err)
+		}
+		fileNames = append(fileNames, fn...)
 	}
 
 	for _, fileName := range fileNames {

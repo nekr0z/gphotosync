@@ -19,6 +19,7 @@ package main
 
 import (
 	"archive/tar"
+	"archive/zip"
 	"bytes"
 	"compress/gzip"
 	"flag"
@@ -119,7 +120,11 @@ func build(tgt target, sign bool, tar bool) {
 
 	if tar {
 		filename = fmt.Sprintf("%s-%s-%s-%s", appName, tgt.goos, tgt.goarch, version)
-		buildTar()
+		if tgt.goos == "windows" {
+			buildZip()
+		} else {
+			buildTar()
+		}
 		fmt.Println("archive", filename, "created")
 	}
 }
@@ -140,6 +145,49 @@ func buildBinary(version string, t int64) {
 	}
 	setFileTime(binName, t)
 	packFiles = append(packFiles, packFile{binName, binName, 0755})
+}
+
+func buildZip() {
+	filename = filename + ".zip"
+	zf, err := os.Create(filename)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer zf.Close()
+
+	zw := zip.NewWriter(zf)
+	defer zw.Close()
+
+	for _, f := range packFiles {
+		sf, err := os.Open(f.src)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		info, err := sf.Stat()
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		h, err := zip.FileInfoHeader(info)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		h.Method = zip.Deflate
+
+		w, err := zw.CreateHeader(h)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		_, err = io.Copy(w, sf)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		sf.Close()
+	}
 }
 
 func buildTar() {

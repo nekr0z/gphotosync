@@ -20,6 +20,10 @@ github.com/hashicorp/golang-lru v0.5.1/go.mod h1:/m3WP610KZHVQ1SGc6re/UDhFvYD7pJ
 github.com/jstemmer/go-junit-report v0.0.0-20190106144839-af01ea7f8024/go.mod h1:6v2b51hI/fHJwM22ozAgKL4VKDeJcHhJFhtBdhmNjmU=
 github.com/nekr0z/gphotoslibrary v0.0.0-20190730073635-f4ab93588613 h1:GVwaCUYMMtLiQxN7vES+jglOSJoXKcTcU1ywHSna0yY=
 github.com/nekr0z/gphotoslibrary v0.0.0-20190730073635-f4ab93588613/go.mod h1:17Ow4G9O7Rud/7sN6qSw4HJ0Mc2on/WyWsqD5y+w5gQ=
+github.com/nekr0z/gphotoslibrary v1.0.0 h1:ZNwerw2onflIYWsH7znatlPFJpUtQoHPPcZkTY5gQ60=
+github.com/nekr0z/gphotoslibrary v1.0.0/go.mod h1:17Ow4G9O7Rud/7sN6qSw4HJ0Mc2on/WyWsqD5y+w5gQ=
+github.com/nekr0z/gphotoslibrary v1.0.1 h1:CinUXtDAqn1AGeS8NiVubyqxTO+YcUMtLHLjStahFvE=
+github.com/nekr0z/gphotoslibrary v1.0.1/go.mod h1:17Ow4G9O7Rud/7sN6qSw4HJ0Mc2on/WyWsqD5y+w5gQ=
 go.opencensus.io v0.21.0/go.mod h1:mSImk1erAIZhrmZN+AvHh14ztQfjbGwt4TtuofqLduU=
 golang.org/x/crypto v0.0.0-20190308221718-c2843e01d9a2/go.mod h1:djNgcEr1/C05ACkg1iLfiJU5Ep61QUkGW8qpdssI0+w=
 golang.org/x/exp v0.0.0-20190121172915-509febef88a4/go.mod h1:CJ0aWSM057203Lf6IL+f9T1iT9GByDxfZKAQTCR3kQA=

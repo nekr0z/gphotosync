@@ -1,6 +1,6 @@
 .*
 gphotosync
 gphotosync.exe
-*.sig
+*.asc
 *.tar.gz
 *.zip

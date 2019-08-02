@@ -1,13 +1,16 @@
 language: go
 
-install: true
+before_install: openssl aes-256-cbc -K $encrypted_d2f4738fa532_key -iv $encrypted_d2f4738fa532_iv -in gpgsecret.asc.enc -out gpgsecret.asc -d
+
+install:
+  - go install github.com/golangci/golangci-lint/cmd/golangci-lint
+  - gpg --import gpgsecret.asc
 
 env:
   - GO111MODULE=on
 
 before_script:
-  - go install github.com/golangci/golangci-lint/cmd/golangci-lint
 
 script: 
   - golangci-lint run
-  - go run build.go oauth.go
+  - go run build.go oauth.go -a

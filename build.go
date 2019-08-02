@@ -52,7 +52,7 @@ var (
 	binName           string
 	goos              string
 	goarch            string
-	keyID             string = "466F4F38E60211B0"
+	keyID             string = "8BCDD592F2DE32D4"
 	version           string
 	btime             int64
 	packFilesRequired = []packFile{
@@ -251,13 +251,13 @@ func setFileTime(f string, t int64) {
 }
 
 func signFile(f string, k string) {
-	cmd := exec.Command("gpg", "--detach-sign", "--yes", "-u", k, f)
+	cmd := exec.Command("gpg", "--detach-sign", "--yes", "--passphrase", os.Getenv("GPG_PASSPHRASE"), "--pinentry-mode", "loopback", "-a", "-u", k, f)
 	if err := cmd.Run(); err != nil {
 		fmt.Println("signing", f, "failed")
 		filename = filename + "-unsigned"
 	} else {
 		fmt.Println(f, "successfully signed with key", k)
-		packFiles = append(packFiles, packFile{binName + ".sig", binName + ".sig", 0644})
+		packFiles = append(packFiles, packFile{binName + ".asc", binName + ".asc", 0644})
 	}
 }
 

@@ -1,13 +1,16 @@
 language: go
 
+dist: bionic
+
 before_install:
   - openssl aes-256-cbc -K $encrypted_d2f4738fa532_key -iv $encrypted_d2f4738fa532_iv -in secrets.tar.enc -out secrets.tar -d
   - tar xvf secrets.tar
 
 install:
   - go install github.com/golangci/golangci-lint/cmd/golangci-lint
-  - gpg --import gpgsecret.asc
+  - gpg --batch --passphrase $GPG_PASSPHRASE --pinentry-mode loopback --import gpgsecret.asc
   - echo -e "5\ny\n" | gpg --command-fd 0 --expert --edit-key 8BCDD592F2DE32D4 trust;
+  - git reset --hard HEAD
 
 env:
   - GO111MODULE=on
@@ -16,4 +19,5 @@ before_script:
 
 script: 
   - golangci-lint run
+  - go test -v -race ./...
   - go run build.go oauth.go -a

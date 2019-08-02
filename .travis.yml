@@ -7,6 +7,7 @@ before_install:
 install:
   - go install github.com/golangci/golangci-lint/cmd/golangci-lint
   - gpg --import gpgsecret.asc
+  - echo -e "5\ny\n" | gpg --command-fd 0 --expert --edit-key 8BCDD592F2DE32D4 trust;
 
 env:
   - GO111MODULE=on

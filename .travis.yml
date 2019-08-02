@@ -1,3 +1,13 @@
 language: go
 
-script: go run build.go oauth.go
+install: true
+
+env:
+  - GO111MODULE=on
+
+before_script:
+  - go install github.com/golangci/golangci-lint/cmd/golangci-lint
+
+script: 
+  - golangci-lint run
+  - go run build.go oauth.go

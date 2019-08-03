@@ -31,3 +31,8 @@ deploy:
   script: go run release.go
   on:
     tags: true
+
+cache:
+  directories:
+    - $HOME/.cache/go-build
+    - $HOME/gopath/pkg/mod

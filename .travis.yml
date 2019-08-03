@@ -23,7 +23,7 @@ script:
   - go run build.go oauth.go
 
 before_deploy:
-  - go install github.com/itchio/gothub
+  - go get github.com/itchio/gothub@master
   - git reset --hard
 
 deploy:

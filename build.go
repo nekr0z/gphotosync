@@ -87,16 +87,14 @@ func main() {
 		*sign = true
 	}
 
-	if *buildAll != true {
+	if !*buildAll {
 		targets = []target{
 			{goos: goos, goarch: goarch},
 		}
 	}
 	for _, tgt := range targets {
 		packFiles = nil
-		for _, pf := range packFilesRequired {
-			packFiles = append(packFiles, pf)
-		}
+		packFiles = append(packFiles, packFilesRequired...)
 		build(tgt, *sign, *tar)
 	}
 }
@@ -114,12 +112,16 @@ func build(tgt target, sign bool, tar bool) {
 	os.Setenv("GOARCH", tgt.goarch)
 	buildBinary(version, btime)
 
+	signed := false
 	if sign {
-		signFile(binName, keyID)
+		signed = signFile(binName, keyID)
 	}
 
 	if tar {
 		filename = fmt.Sprintf("%s-%s-%s-%s", appName, tgt.goos, tgt.goarch, version)
+		if !signed {
+			filename = filename + "-unsigned"
+		}
 		if tgt.goos == "windows" {
 			buildZip()
 		} else {
@@ -250,14 +252,15 @@ func setFileTime(f string, t int64) {
 	}
 }
 
-func signFile(f string, k string) {
+func signFile(f string, k string) bool {
 	cmd := exec.Command("gpg", "--detach-sign", "--yes", "--passphrase", os.Getenv("GPG_PASSPHRASE"), "--pinentry-mode", "loopback", "-a", "-u", k, f)
 	if err := cmd.Run(); err != nil {
 		fmt.Println("signing", f, "failed")
-		filename = filename + "-unsigned"
+		return false
 	} else {
 		fmt.Println(f, "successfully signed with key", k)
 		packFiles = append(packFiles, packFile{binName + ".asc", binName + ".asc", 0644})
+		return true
 	}
 }
 

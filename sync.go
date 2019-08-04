@@ -25,6 +25,7 @@ import (
 	"os"
 	"path"
 	"strconv"
+	"strings"
 	"time"
 
 	photoslibrary "github.com/nekr0z/gphotoslibrary"
@@ -108,7 +109,8 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 }
 
 func addTimestampToPath(p string, t time.Time) string {
-	return p + "-" + strconv.FormatInt(t.UnixNano(), 16) + path.Ext(p)
+	e := path.Ext(p)
+	return strings.TrimSuffix(p, e) + "-gphotosync-" + strconv.FormatInt(t.UnixNano(), 16) + e
 }
 
 func (lib *Library) GetTokenPath() string {

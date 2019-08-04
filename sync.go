@@ -84,7 +84,7 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 	// multiple items with same filename can exist in remote
 	// we try to mitigate it by adding timestamp to local filename
 	if stat, err := os.Stat(mediaPath); !os.IsNotExist(err) && stat.ModTime().UnixNano() != remoteCreationTime.UnixNano() {
-		mediaPath = mediaPath + "-" + strconv.FormatInt(remoteCreationTime.UnixNano(), 16) + path.Ext(mediaPath)
+		mediaPath = addTimestampToPath(mediaPath, remoteCreationTime)
 	}
 
 	if _, err := os.Stat(mediaPath); os.IsNotExist(err) {
@@ -105,6 +105,10 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 	}
 
 	return nil
+}
+
+func addTimestampToPath(p string, t time.Time) string {
+	return p + "-" + strconv.FormatInt(t.UnixNano(), 16) + path.Ext(p)
 }
 
 func (lib *Library) GetTokenPath() string {

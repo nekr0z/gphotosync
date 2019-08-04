@@ -149,9 +149,6 @@ func process(version string) {
 		}
 		fmt.Println(fileName, "uploaded successfully")
 	}
-
-	// git checkout back to master
-	checkout("master")
 }
 
 func checkout(version string) {

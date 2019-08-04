@@ -21,8 +21,8 @@ This app is a fork of [Denis Vashchuk's project](https://gitlab.com/denis4net/gp
 |  |  +-- 20190704.JPG
 |  +-- 05/
 |  |  +-- VIDEO.MPG
-|  |  +-- VIDEO.MPG-159b90e8a152aa00.MPG
-|  |  +-- VIDEO.MPG-159e8e0cdc16be00.MPG
+|  |  +-- VIDEO-gphotosync-159b90e8a152aa00.MPG
+|  |  +-- VIDEO-gphotosync-159e8e0cdc16be00.MPG
 |  +-- 01/
 |     +-- IMG512.JPG
 +-- 2018/

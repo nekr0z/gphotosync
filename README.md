@@ -33,6 +33,8 @@ This app is a fork of [Denis Vashchuk's project](https://gitlab.com/denis4net/gp
 |     +-- 0004.jpg
 ...etc
 ```
+The appended value is by default a hex representation of Unix timestamp. You can use `-strategy id` command line option to append Google Photo ID of the media file instead of timestamp.
+
 ### Usage
 If you are planning to use the app for scheduled backups (which is totally OK), please consider the following:
 * It's not a good idea to schedule these backups to run on the hour (i.e. at 3:00, 10:00, 17:00, etc.), and it's even worse to schedule them for midnight. If enough people do that, Google servers will have to process a lot of requests from all of us at the same very second; eventially Google will ban the API key. The app already has a random delay (between 0 and 60 seconds) before it starts, but you can help things more if you schedule the runs for some random minute of the hour.

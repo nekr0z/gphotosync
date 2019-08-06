@@ -9,7 +9,7 @@ import (
 var (
 	testLib = Library{
 		Path:         "/some/path/",
-		Deduplicator: deduplicatePath,
+		Deduplicator: dedupUnixHex,
 	}
 	testMetadata = photoslibrary.MediaMetadata{
 		CreationTime: "2006-01-02T15:04:05Z",
@@ -22,9 +22,9 @@ var (
 
 func TestDeduplicatePath(t *testing.T) {
 
-	t.Run("-gphotosync-UnixNano.ext", func(t *testing.T) {
-		got := deduplicatePath("somepath/whatever.tex", &testItem)
-		want := "somepath/whatever-gphotosync-fc4a4d5fdf6b200.tex"
+	t.Run("-gphotosync-UnixHex.ext", func(t *testing.T) {
+		got, _ := deduplicatePath(&testLib, &testItem)
+		want := "/some/path/2006/01/20060102_150405-gphotosync-fc4a4d5fdf6b200.mp4"
 		assertCorrectMessage(t, got, want)
 	})
 

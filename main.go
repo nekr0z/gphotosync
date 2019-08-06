@@ -37,7 +37,7 @@ func main() {
 
 	lib := Library{
 		Path:         *localLibArg,
-		Deduplicator: deduplicatePath,
+		Deduplicator: dedupUnixHex,
 	}
 
 	fmt.Printf("gphotosync version %s\n", version)

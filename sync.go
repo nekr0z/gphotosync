@@ -76,7 +76,10 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 		return err
 	}
 
-	mediaPath := path.Join(lib.Path, strconv.Itoa(remoteCreationTime.Year()), fmt.Sprintf("%02d", remoteCreationTime.Month()), mItem.Filename)
+	mediaPath, err := getMediaPath(lib, mItem)
+	if err != nil {
+		return err
+	}
 
 	if err := os.MkdirAll(path.Dir(mediaPath), 0755); err != nil {
 		return err
@@ -106,6 +109,14 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 	}
 
 	return nil
+}
+
+func getMediaPath(lib *Library, mItem *photoslibrary.MediaItem) (string, error) {
+	remoteCreationTime, err := time.Parse(time.RFC3339, mItem.MediaMetadata.CreationTime)
+	if err != nil {
+		return "", err
+	}
+	return path.Join(lib.Path, strconv.Itoa(remoteCreationTime.Year()), fmt.Sprintf("%02d", remoteCreationTime.Month()), mItem.Filename), nil
 }
 
 func deduplicatePath(p string, t time.Time) string {

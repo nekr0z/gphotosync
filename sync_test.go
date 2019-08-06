@@ -8,10 +8,8 @@ import (
 
 var (
 	testLib = Library{
-		Path: "/some/path/",
-		Deduplicator: func(pth string, itm *photoslibrary.MediaItem) string {
-			return deduplicatePath(pth, itm)
-		},
+		Path:         "/some/path/",
+		Deduplicator: deduplicatePath,
 	}
 	testMetadata = photoslibrary.MediaMetadata{
 		CreationTime: "2006-01-02T15:04:05Z",

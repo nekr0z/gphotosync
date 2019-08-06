@@ -23,8 +23,6 @@ import (
 	"math/rand"
 	"path"
 	"time"
-
-	photoslibrary "github.com/nekr0z/gphotoslibrary"
 )
 
 var (
@@ -38,10 +36,8 @@ func main() {
 	flag.Parse()
 
 	lib := Library{
-		Path: *localLibArg,
-		Deduplicator: func(pth string, itm *photoslibrary.MediaItem) string {
-			return deduplicatePath(pth, itm)
-		},
+		Path:         *localLibArg,
+		Deduplicator: deduplicatePath,
 	}
 
 	fmt.Printf("gphotosync version %s\n", version)

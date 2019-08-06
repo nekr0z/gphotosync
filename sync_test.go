@@ -17,6 +17,7 @@ var (
 	testItem = photoslibrary.MediaItem{
 		Filename:      "20060102_150405.mp4",
 		MediaMetadata: &testMetadata,
+		Id:            "AAJ-kdRYAOoSLowCcySWIOXkQzV_HTy78NjW9Sfq5OLf596iz09YdIpL4vO3KVW1uMJ7zhtpHWf7KcpAzudOyHjgiZNgiPRGuQ",
 	}
 )
 
@@ -29,6 +30,10 @@ func TestDeduplicatePath(t *testing.T) {
 	})
 
 	t.Run("-gphotosync-id.ext", func(t *testing.T) {
+		testLib.Deduplicator = dedupID
+		got, _ := deduplicatePath(&testLib, &testItem)
+		want := "/some/path/2006/01/20060102_150405-gphotosync-AAJ-kdRYAOoSLowCcySWIOXkQzV_HTy78NjW9Sfq5OLf596iz09YdIpL4vO3KVW1uMJ7zhtpHWf7KcpAzudOyHjgiZNgiPRGuQ.mp4"
+		assertCorrectMessage(t, got, want)
 	})
 }
 

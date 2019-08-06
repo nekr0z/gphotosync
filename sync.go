@@ -140,6 +140,10 @@ func dedupUnixHex(item *photoslibrary.MediaItem) string {
 	return strconv.FormatInt(remoteCreationTime.UnixNano(), 16)
 }
 
+func dedupID(item *photoslibrary.MediaItem) string {
+	return item.Id
+}
+
 func (lib *Library) GetTokenPath() string {
 	return path.Join(lib.Path, ".token.json")
 }

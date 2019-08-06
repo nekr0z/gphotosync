@@ -33,11 +33,18 @@ var (
 
 func main() {
 	localLibArg := flag.String("lib", "", "local library path")
+	dedup := flag.String("strategy", "unixhex", "filename deduplication strategy: [unixhex|id]")
 	flag.Parse()
 
 	lib := Library{
 		Path:         *localLibArg,
 		Deduplicator: dedupUnixHex,
+	}
+	switch *dedup {
+	case "id":
+		lib.Deduplicator = dedupID
+	case "unixhex":
+		lib.Deduplicator = dedupUnixHex
 	}
 
 	fmt.Printf("gphotosync version %s\n", version)

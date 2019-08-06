@@ -33,7 +33,8 @@ import (
 )
 
 type Library struct {
-	Path string
+	Path         string
+	Deduplicator func(string, *photoslibrary.MediaItem) string
 }
 
 func DownloadFile(url string, path string) error {
@@ -88,7 +89,7 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 	// multiple items with same filename can exist in remote
 	// we try to mitigate it by adding timestamp to local filename
 	if stat, err := os.Stat(mediaPath); !os.IsNotExist(err) && stat.ModTime().UnixNano() != remoteCreationTime.UnixNano() {
-		mediaPath = deduplicatePath(mediaPath, remoteCreationTime)
+		mediaPath = deduplicatePath(mediaPath, mItem)
 	}
 
 	if _, err := os.Stat(mediaPath); os.IsNotExist(err) {
@@ -119,9 +120,13 @@ func getMediaPath(lib *Library, mItem *photoslibrary.MediaItem) (string, error) 
 	return path.Join(lib.Path, strconv.Itoa(remoteCreationTime.Year()), fmt.Sprintf("%02d", remoteCreationTime.Month()), mItem.Filename), nil
 }
 
-func deduplicatePath(p string, t time.Time) string {
+func deduplicatePath(p string, item *photoslibrary.MediaItem) string {
+	remoteCreationTime, err := time.Parse(time.RFC3339, item.MediaMetadata.CreationTime)
+	if err != nil {
+		return p
+	}
 	e := path.Ext(p)
-	return strings.TrimSuffix(p, e) + "-gphotosync-" + strconv.FormatInt(t.UnixNano(), 16) + e
+	return strings.TrimSuffix(p, e) + "-gphotosync-" + strconv.FormatInt(remoteCreationTime.UnixNano(), 16) + e
 }
 
 func (lib *Library) GetTokenPath() string {

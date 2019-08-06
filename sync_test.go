@@ -2,17 +2,31 @@ package main
 
 import (
 	"testing"
-	"time"
 
 	photoslibrary "github.com/nekr0z/gphotoslibrary"
+)
+
+var (
+	testLib = Library{
+		Path: "/some/path/",
+		Deduplicator: func(pth string, itm *photoslibrary.MediaItem) string {
+			return deduplicatePath(pth, itm)
+		},
+	}
+	testMetadata = photoslibrary.MediaMetadata{
+		CreationTime: "2006-01-02T15:04:05Z",
+	}
+	testItem = photoslibrary.MediaItem{
+		Filename:      "20060102_150405.mp4",
+		MediaMetadata: &testMetadata,
+	}
 )
 
 func TestDeduplicatePath(t *testing.T) {
 
 	t.Run("-gphotosync-UnixNano.ext", func(t *testing.T) {
-		testTime, _ := time.Parse("2006-01-02 15:04:05.000000000 MST -07:00", "1609-09-12 19:02:35.123456789 PDT +03:00")
-		got := deduplicatePath("somepath/whatever.tex", testTime)
-		want := "somepath/whatever-gphotosync-62359ca6994c1b15.tex"
+		got := deduplicatePath("somepath/whatever.tex", &testItem)
+		want := "somepath/whatever-gphotosync-fc4a4d5fdf6b200.tex"
 		assertCorrectMessage(t, got, want)
 	})
 
@@ -21,15 +35,6 @@ func TestDeduplicatePath(t *testing.T) {
 }
 
 func TestGetMediaPath(t *testing.T) {
-	testLib := Library{Path: "/some/path/"}
-	testMetadata := photoslibrary.MediaMetadata{
-		CreationTime: "2006-01-02T15:04:05Z",
-	}
-	testItem := photoslibrary.MediaItem{
-		Filename:      "20060102_150405.mp4",
-		MediaMetadata: &testMetadata,
-	}
-
 	got, _ := getMediaPath(&testLib, &testItem)
 	want := "/some/path/2006/01/20060102_150405.mp4"
 	assertCorrectMessage(t, got, want)

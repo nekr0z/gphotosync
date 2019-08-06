@@ -89,7 +89,7 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 	// multiple items with same filename can exist in remote
 	// we try to mitigate it by adding timestamp to local filename
 	if stat, err := os.Stat(mediaPath); !os.IsNotExist(err) && stat.ModTime().UnixNano() != remoteCreationTime.UnixNano() {
-		mediaPath = deduplicatePath(mediaPath, mItem)
+		mediaPath = lib.Deduplicator(mediaPath, mItem)
 	}
 
 	if _, err := os.Stat(mediaPath); os.IsNotExist(err) {

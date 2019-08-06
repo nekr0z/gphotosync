@@ -76,7 +76,10 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 		return err
 	}
 
-	mediaPath := path.Join(lib.Path, strconv.Itoa(remoteCreationTime.Year()), fmt.Sprintf("%02d", remoteCreationTime.Month()), mItem.Filename)
+	mediaPath, err := getMediaPath(lib, mItem)
+	if err != nil {
+		return err
+	}
 
 	if err := os.MkdirAll(path.Dir(mediaPath), 0755); err != nil {
 		return err
@@ -85,7 +88,7 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 	// multiple items with same filename can exist in remote
 	// we try to mitigate it by adding timestamp to local filename
 	if stat, err := os.Stat(mediaPath); !os.IsNotExist(err) && stat.ModTime().UnixNano() != remoteCreationTime.UnixNano() {
-		mediaPath = addTimestampToPath(mediaPath, remoteCreationTime)
+		mediaPath = deduplicatePath(mediaPath, remoteCreationTime)
 	}
 
 	if _, err := os.Stat(mediaPath); os.IsNotExist(err) {
@@ -108,7 +111,15 @@ func (lib *Library) SyncMediaItem(mItem *photoslibrary.MediaItem) error {
 	return nil
 }
 
-func addTimestampToPath(p string, t time.Time) string {
+func getMediaPath(lib *Library, mItem *photoslibrary.MediaItem) (string, error) {
+	remoteCreationTime, err := time.Parse(time.RFC3339, mItem.MediaMetadata.CreationTime)
+	if err != nil {
+		return "", err
+	}
+	return path.Join(lib.Path, strconv.Itoa(remoteCreationTime.Year()), fmt.Sprintf("%02d", remoteCreationTime.Month()), mItem.Filename), nil
+}
+
+func deduplicatePath(p string, t time.Time) string {
 	e := path.Ext(p)
 	return strings.TrimSuffix(p, e) + "-gphotosync-" + strconv.FormatInt(t.UnixNano(), 16) + e
 }

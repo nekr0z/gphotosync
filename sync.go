@@ -171,16 +171,16 @@ func (lib *Library) Sync(cred Credentials) error {
 				/// If the quota of requests to the Library API is exceeded, the API returns an error code 429 and a message that the project has exceeded the quota.
 				switch apiError.Code {
 				case 429:
-					log.Printf("failed to get media items: %s", apiError.Message)
+					fmt.Printf("failed to get media items: %s\nwill wait and try again\n", apiError.Message)
 					time.Sleep(waitTime)
 					waitTime = waitTime * 2
 					continue
 				case 500:
-					log.Println("got error 500 from server, let's wait and see")
+					fmt.Println("got error 500 from server, let's wait and see")
 					time.Sleep(time.Minute)
 					continue
 				case 502:
-					log.Println("got error 502 from Google API, will retry in 30 seconds")
+					fmt.Println("got error 502 from Google API, will retry in 30 seconds")
 					time.Sleep(30 * time.Second)
 					continue
 				default:

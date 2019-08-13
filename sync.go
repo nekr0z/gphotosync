@@ -183,6 +183,10 @@ func (lib *Library) Sync(cred Credentials) error {
 					fmt.Println("got error 502 from Google API, will retry in 30 seconds")
 					time.Sleep(30 * time.Second)
 					continue
+				case 503:
+					fmt.Println("got error 503 from server, will wait for a minute and try again")
+					time.Sleep(time.Minute)
+					continue
 				default:
 					return err
 				}

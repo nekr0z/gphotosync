@@ -193,11 +193,16 @@ func (lib *Library) Sync(cred Credentials) error {
 			}
 		}
 
-		fmt.Printf("processing %d items\n", len(res.MediaItems))
-		for _, mItem := range res.MediaItems {
-			err = lib.SyncMediaItem(mItem)
-			if err != nil {
-				log.Printf("failed to sync item \"%s\": %s", mItem.Id, err)
+		// sometimes API would return an empty page but no error code either
+		if res.MediaItems == nil {
+			fmt.Println("looks like Google returned empty page...")
+		} else {
+			fmt.Printf("processing %d items\n", len(res.MediaItems))
+			for _, mItem := range res.MediaItems {
+				err = lib.SyncMediaItem(mItem)
+				if err != nil {
+					log.Printf("failed to sync item \"%s\": %s", mItem.Id, err)
+				}
 			}
 		}
 

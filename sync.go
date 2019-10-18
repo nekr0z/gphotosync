@@ -193,8 +193,8 @@ func (lib *Library) Sync(cred Credentials) error {
 			}
 		}
 
-		// sometimes API would return an empty page but no error code either
-		if res.MediaItems == nil {
+		// sometimes the library returns both err and res empty (yep, a bug in there)
+		if res == nil {
 			fmt.Println("looks like Google returned empty page...")
 		} else {
 			fmt.Printf("processing %d items\n", len(res.MediaItems))

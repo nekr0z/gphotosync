@@ -19,7 +19,7 @@ before_script:
 
 script: 
   - golangci-lint run
-  - go test -v -race ./...
+  - go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
   - go run build.go oauth.go
 
 before_deploy:
@@ -37,3 +37,6 @@ cache:
   directories:
     - $HOME/.cache/go-build
     - $HOME/gopath/pkg/mod
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)

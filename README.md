@@ -1,6 +1,8 @@
 # gphotosync
 An app to download pictures and videos stored in your Google Photos.
 
+[![Build Status](https://travis-ci.org/nekr0z/gphotosync.svg?branch=master)](https://travis-ci.org/nekr0z/gphotosync) [![codecov](https://codecov.io/gh/nekr0z/gphotosync/branch/master/graph/badge.svg)](https://codecov.io/gh/nekr0z/gphotosync) [![GolangCI](https://golangci.com/badges/github.com/nekr0z/gphotosync.svg)](https://golangci.com)
+
 This app is a fork of [Denis Vashchuk's project](https://gitlab.com/denis4net/gphotosync).
 
 ##### Table of Contents

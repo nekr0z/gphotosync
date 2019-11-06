@@ -196,6 +196,7 @@ func (lib *Library) Sync(cred Credentials) error {
 		// sometimes the library returns both err and res empty (yep, a bug in there)
 		if res == nil {
 			fmt.Println("looks like Google returned empty page...")
+			return nil
 		} else {
 			fmt.Printf("processing %d items\n", len(res.MediaItems))
 			for _, mItem := range res.MediaItems {

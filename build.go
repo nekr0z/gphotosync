@@ -65,6 +65,7 @@ var (
 		{goos: "linux", goarch: "386"},
 		{goos: "linux", goarch: "amd64"},
 		{goos: "linux", goarch: "arm"},
+		{goos: "linux", goarch: "arm64"},
 		{goos: "windows", goarch: "386"},
 		{goos: "windows", goarch: "amd64"},
 		{goos: "darwin", goarch: "amd64"},

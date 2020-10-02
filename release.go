@@ -26,11 +26,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"regexp"
-	"strings"
-)
-
-const (
-	githubRepo string = "gphotosync"
 )
 
 var (
@@ -49,17 +44,9 @@ func main() {
 		log.Fatalln("github user not set, can't work")
 	}
 
-	var version string
-	if flag.NArg() == 0 {
-		// release latest version
-		res, err := getString("git", "describe")
-		if err != nil {
-			log.Fatalln(err)
-		}
-		r := strings.Split(res, "-")
-		version = r[0]
-	} else {
-		version = flag.Arg(0)
+	version, err := getString("git", "describe")
+	if err != nil {
+		log.Fatalln(err)
 	}
 
 	// check version format
@@ -73,54 +60,9 @@ func main() {
 }
 
 func process(version string) {
-	gitVersion := version
-	version = version[1:]
-
-	// check if corresponding tag even exists
-	res, err := getString("git", "ls-remote", "origin", gitVersion)
-	if err != nil || res == "" {
-		log.Fatalln("Tag doesn't seem to exist, giving up.")
-	}
-
-	// check if this version is already released
-	res, err = getString("gothub", "info", "-r", githubRepo, "-t", gitVersion)
-	if err == nil || res != "error: could not find the release corresponding to tag "+gitVersion {
-		log.Fatalln("Something wrong. Already released? Giving up.")
-	}
-
-	// git checkout requested version
-	checkout(gitVersion)
-
 	// build
 	fmt.Println("building...")
 	cmd := exec.Command("go", "run", "build.go", "oauth.go", "-a")
-	if err := cmd.Run(); err != nil {
-		log.Fatalln(err)
-	}
-
-	// get release description from tag
-	desc, err := getString("git", "tag", "-ln", "--format=%(contents)", gitVersion)
-	if err != nil {
-		log.Fatalln(err)
-	}
-	descStrings := strings.Split(desc, "\n")
-	for i, descString := range descStrings {
-		if descString == "-----BEGIN PGP SIGNATURE-----" {
-			descStrings = descStrings[:i]
-			break
-		}
-	}
-	desc = strings.Join(descStrings, "\n")
-
-	// release version
-	args := []string{
-		"release",
-		"-r", githubRepo,
-		"-t", gitVersion,
-		"-n", version,
-		"-d", desc,
-	}
-	cmd = exec.Command("gothub", args...)
 	if err := cmd.Run(); err != nil {
 		log.Fatalln(err)
 	}
@@ -137,25 +79,14 @@ func process(version string) {
 
 	for _, fileName := range fileNames {
 		args := []string{
-			"upload",
-			"-r", githubRepo,
-			"-t", gitVersion,
-			"-n", fileName,
-			"-f", fileName,
+			fileName,
+			"release/",
 		}
-		cmd := exec.Command("gothub", args...)
+		cmd := exec.Command("cp", args...)
 		if err := cmd.Run(); err != nil {
-			fmt.Println("failed to upload", fileName)
+			fmt.Println("failed to copy", fileName)
 		}
-		fmt.Println(fileName, "uploaded successfully")
-	}
-}
-
-func checkout(version string) {
-	fmt.Printf("trying to git checkout %s...\n", version)
-	cmd := exec.Command("git", "checkout", version)
-	if err := cmd.Run(); err != nil {
-		log.Fatalln(err)
+		fmt.Println(fileName, "copied successfully")
 	}
 }
 

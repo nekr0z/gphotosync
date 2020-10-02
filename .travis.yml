@@ -26,15 +26,22 @@ script:
   - go run build.go oauth.go
 
 before_deploy:
-  - go get github.com/itchio/gothub@master
   - git reset --hard
+  - mkdir release
 
 deploy:
-  provider: script
-  script: go run release.go
-  skip_cleanup: true
-  on:
-    tags: true
+  - provider: script
+    script: go run release.go
+    skip_cleanup: true
+    on:
+      tags: true
+  - provider: releases
+    api_key: $GITHUB_TOKEN
+    file_glob: true
+    file: release/*
+    skip_cleanup: true
+    on:
+      tags: true
 
 cache:
   directories:

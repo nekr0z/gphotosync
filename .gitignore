@@ -1,6 +1,7 @@
 .*
 gphotosync
 gphotosync.exe
+/release/
 *.asc
 *.tar
 *.tar.gz

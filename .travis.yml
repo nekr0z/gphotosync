@@ -10,7 +10,6 @@ before_install:
   - tar xvf secrets.tar
 
 install:
-  - bash <(curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.24.0)
   - gpg --batch --passphrase $GPG_PASSPHRASE --pinentry-mode loopback --import gpgsecret.asc
   - echo -e "5\ny\n" | gpg --command-fd 0 --expert --edit-key 8BCDD592F2DE32D4 trust;
   - git reset --hard
@@ -21,7 +20,6 @@ env:
 before_script:
 
 script: 
-  - golangci-lint run
   - go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
   - go run build.go oauth.go
 

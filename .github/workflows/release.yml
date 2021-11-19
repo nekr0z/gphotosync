@@ -1,5 +1,9 @@
-name: release_test
-on: [push]
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
 
 jobs:
   release:
@@ -57,6 +61,7 @@ jobs:
             zip -q release/gphotosync-$VER-windows-$ARCH.zip gphotosync.exe LICENSE README.md CHANGELOG.md
           done
           GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w -buildid= -X main.version=$VER -X main.googleClientId=${{ secrets.CLIENT_ID }} -X main.googleClientSecret=${{ secrets.CLIENT_SECRET }}"
+          tar -czf release/gphotosync-$VER-darwin-amd64.tar.gz gphotosync LICENSE README.md CHANGELOG.md SOURCE.txt
           cd release
           fpm -s deb -t deb -a i386 *386.deb
           rm *_386.deb
@@ -67,7 +72,7 @@ jobs:
         uses: marvinpinto/action-automatic-releases@v1.2.1
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
-          prerelease: true
+          prerelease: false
           files: "release/*"
 
       - name: trigger repository update

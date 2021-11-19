@@ -6,6 +6,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Pre-release]
 
+## [0.3.4] - 2021-11-19
+- dependencies update
+
 ## [0.3.3] - 2019-11-06
 ### Fixed
 - library bug workaround
@@ -33,6 +36,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 *initial release*
 
 [Pre-release]: https://github.com/nekr0z/gphotosync/releases/tag/latest
+[0.3.4]: https://github.com/nekr0z/gphotosync/releases/tag/v0.3.4
 [0.3.3]: https://github.com/nekr0z/gphotosync/releases/tag/v0.3.3
 [0.3.2]: https://github.com/nekr0z/gphotosync/releases/tag/v0.3.2
 [0.3.1]: https://github.com/nekr0z/gphotosync/releases/tag/v0.3.1

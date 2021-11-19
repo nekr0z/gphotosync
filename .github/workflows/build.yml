@@ -1,0 +1,44 @@
+name: build
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux, windows, darwin]
+        goarch: [amd64, 386]
+        include:
+          - goos: linux
+            goarch: arm
+          - goos: linux
+            goarch: arm64
+    env:
+      GOPROXY: direct
+    steps:
+      - uses: actions/checkout@v2.4.0
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+      - name: cache
+        uses: actions/cache@v2.1.6
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: |
+            ${{ runner.os }}-build-${{ hashFiles('**/go.mod') }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ hashFiles('**/go.mod') }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: build packages
+        run: |
+          VER=$(go generate)
+          GOOS=${{ matrix.goos }}
+          GOARCH=${{ matrix.goarch }}
+          CGO_ENABLED=0
+          go build -ldflags "-s -w -buildid= -X main.version=$VER -X main.googleClientId=${{ secrets.CLIENT_ID }} -X main.googleClientSecret=${{ secrets.CLIENT_SECRET }}"
+          echo "successful build for" $GOOS $GOARCH

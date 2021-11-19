@@ -1,0 +1,79 @@
+name: release_test
+on: [push]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GOPROXY: direct
+    steps:
+      - uses: actions/checkout@v2.4.0
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-go@v2
+        with:
+          go-version: 1.16
+
+      - name: install changelog
+        run: |
+          go install evgenykuznetsov.org/go/changelog/cmd/changelog@latest
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.7
+          bundler-cache: true
+
+      - name: install fpm
+        run: gem install fpm
+
+      - name: build packages
+        run: |
+          git fetch --tags --force
+          mkdir release
+          changelog -n "Evgeny Kuznetsov" -e "evgeny@kuznetsov.md" -p "gphotosync" CHANGELOG.md
+          VER=$(go generate)
+          for ARCH in amd64 386 arm arm64; do
+            GOARCH=$ARCH CGO_ENABLED=0 go build -ldflags "-s -w -buildid= -X main.version=$VER -X main.googleClientId=${{ secrets.CLIENT_ID }} -X main.googleClientSecret=${{ secrets.CLIENT_SECRET }}"
+            tar -czf release/gphotosync-$VER-linux-$ARCH.tar.gz gphotosync LICENSE README.md CHANGELOG.md SOURCE.txt
+            fpm -t deb -s dir \
+              -a $ARCH \
+              -n gphotosync -v ${VER%+*} \
+              -m "Evgeny Kuznetsov <evgeny@kuznetsov.md>" \
+              --deb-changelog debian.changelog \
+              --license GPL-3 \
+              --deb-priority optional \
+              --url https://evgenykuznetsov.org/go/gphotosync \
+              --category net \
+              --vendor "Evgeny Kuznetsov <evgeny@kuznetsov.md>" \
+              --description "An app to download pictures and videos stored in your Google Photos." \
+              LICENSE=/usr/share/doc/gphotosync/ \
+              README.md=/usr/share/doc/gphotosync/ \
+              SOURCE.txt=/usr/share/doc/gphotosync \
+              gphotosync=/usr/bin/
+            mv *.deb release/
+          done
+          for ARCH in amd64 386; do
+            GOOS=windows GOARCH=$ARCH go build -ldflags "-s -w -buildid= -X main.version=$VER -X main.googleClientId=${{ secrets.CLIENT_ID }} -X main.googleClientSecret=${{ secrets.CLIENT_SECRET }}"
+            zip -q release/gphotosync-$VER-windows-$ARCH.zip gphotosync.exe LICENSE README.md CHANGELOG.md
+          done
+          GOOS=darwin GOARCH=amd64 go build -ldflags "-s -w -buildid= -X main.version=$VER -X main.googleClientId=${{ secrets.CLIENT_ID }} -X main.googleClientSecret=${{ secrets.CLIENT_SECRET }}"
+          cd release
+          fpm -s deb -t deb -a i386 *386.deb
+          rm *_386.deb
+          fpm -s deb -t deb -a armel *arm.deb
+          rm *arm.deb
+
+      - name: release
+        uses: marvinpinto/action-automatic-releases@v1.2.1
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: true
+          files: "release/*"
+
+      - name: trigger repository update
+        uses: appleboy/ssh-action@v0.1.4
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: gphotosync

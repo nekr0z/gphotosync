@@ -1,7 +1,7 @@
 # gphotosync
 An app to download pictures and videos stored in your Google Photos.
 
-[![Build Status](https://travis-ci.org/nekr0z/gphotosync.svg?branch=master)](https://travis-ci.org/nekr0z/gphotosync) [![codecov](https://codecov.io/gh/nekr0z/gphotosync/branch/master/graph/badge.svg)](https://codecov.io/gh/nekr0z/gphotosync) [![Go Report Card](https://goreportcard.com/badge/github.com/nekr0z/gphotosync)](https://goreportcard.com/report/github.com/nekr0z/gphotosync)
+![Build Status](https://github.com/nekr0z/gphotosync/actions/workflows/build.yml/badge.svg) [![codecov](https://codecov.io/gh/nekr0z/gphotosync/branch/master/graph/badge.svg)](https://codecov.io/gh/nekr0z/gphotosync) [![Go Report Card](https://goreportcard.com/badge/evgenykuznetsov.org/go/gphotosync)](https://goreportcard.com/report/evgenykuznetsov.org/go/gphotosync)
 
 This app is a fork of [Denis Vashchuk's project](https://gitlab.com/denis4net/gphotosync).
 
@@ -46,14 +46,11 @@ If you are planning to use the app for scheduled backups (which is totally OK), 
 You can use your own project's credentials for authentification: create a project using Photos Library API in [Google Developers Console](https://console.developers.google.com), download JSON credentials file from ID page, rename it to `.client_secret.json` and put in the directory where your local photos library will be downloaded. If no `.client_secret.json` is found in the working directory, the credentials supplied at build time will be used.
 
 ## Building the app
+If you want authentification credentials compiled in, supply both `client_id` and `client_secret` from your `.client_secret.json` at compile time (see [Authentification](#authentification) section for details):
+
 ```
-$ ./build.sh
+go build -ldflags "-X main.googleClientId={client_id} -X main.googleClientSecret={client_secret}"
 ```
-or, if you're running a non-proper-shell-capable OS (i.e. Windows)
-```
-go run build.go oauth.go
-```
-If you want authentification credentials compiled in, have a `.client_secret.json` in repository directory at compile time (see [Authentification](#authentification) section for details).
 
 ## Privacy considerations
 If you're using the precompiled version of the app with builtin project credentials, the activity of your copy of the app will be included in what I see in my Google Developer Console (it shows the cumulative activity such as number of requests per hour or day, median delay in serving those requests, and so on; I'm not aware of any way to see any personal or personalized data there). Other than that no one (but Google and your ISP or VPN provider, of course) has any way to have any access to your stuff or collect any data about how you are using it. Hey, you can read the source code and see for yourself what it does, and you can recompile the code yourself just to make sure!
@@ -61,6 +58,6 @@ If you're using the precompiled version of the app with builtin project credenti
 ## Credits
 This software includes the following software or parts thereof:
 * [googleapi](https://google.golang.org/api/googleapi) Copyright 2018 Google
-* [nekr0z/gphotoslibrary](https://github.com/nekr0z/gphotoslibrary) Copyright 2018 Google, parts copyright 2019 Evgeny Kuznetsov
+* [gphotoslibrary](https://evgenykuznetsov.org/go/gphotoslibrary) Copyright 2018 Google, parts copyright 2019 Evgeny Kuznetsov
 * [OAuth2 for Go](https://github.com/golang/oauth2) Copyright 2014 The Go Authors
 * [The Go Programming Language](https://golang.org) Copyright 2009 The Go Authors

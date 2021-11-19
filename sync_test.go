@@ -3,7 +3,7 @@ package main
 import (
 	"testing"
 
-	photoslibrary "github.com/nekr0z/gphotoslibrary"
+	photoslibrary "evgenykuznetsov.org/go/gphotoslibrary"
 )
 
 var (

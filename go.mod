@@ -1,4 +1,4 @@
-module github.com/nekr0z/gphotosync
+module evgenykuznetsov.org/go/gphotosync
 
 require (
 	github.com/nekr0z/gphotoslibrary v1.0.1

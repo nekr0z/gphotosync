@@ -28,7 +28,7 @@ import (
 	"strings"
 	"time"
 
-	photoslibrary "github.com/nekr0z/gphotoslibrary"
+	photoslibrary "evgenykuznetsov.org/go/gphotoslibrary"
 	"google.golang.org/api/googleapi"
 )
 

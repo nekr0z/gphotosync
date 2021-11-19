@@ -26,7 +26,7 @@ import (
 	"net/http"
 	"os"
 
-	photoslibrary "github.com/nekr0z/gphotoslibrary"
+	photoslibrary "evgenykuznetsov.org/go/gphotoslibrary"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
 )

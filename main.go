@@ -19,10 +19,12 @@
 package main
 
 import (
+	"encoding/json"
 	"flag"
 	"fmt"
 	"log"
 	"math/rand"
+	"os"
 	"path"
 	"time"
 )
@@ -52,11 +54,11 @@ func main() {
 	fmt.Printf("gphotosync version %s\n", version)
 
 	// if .client_secret.json exists in local lib path, use those credentials
-	cred := Credentials{
+	cred := credentials{
 		ID:     googleClientId,
 		Secret: googleClientSecret,
 	}
-	err := ReadSecretJSON(path.Join(*localLibArg, ".client_secret.json"), &cred)
+	err := readSecretJSON(path.Join(*localLibArg, ".client_secret.json"), &cred)
 	if err != nil {
 		fmt.Printf("couldn't read credentials from .client_secret.json: %s\n", err)
 	} else {
@@ -78,4 +80,29 @@ func main() {
 	if err := lib.Sync(cred); err != nil {
 		log.Fatal(err)
 	}
+}
+
+type credentials struct {
+	ID     string
+	Secret string
+}
+
+// readSecretJSON reads the saved credentials from a JSON file
+func readSecretJSON(file string, cr *credentials) error {
+	data, err := os.ReadFile(file)
+	if err != nil {
+		return err
+	}
+
+	var f map[string]interface{}
+	err = json.Unmarshal(data, &f)
+	if err != nil {
+		return err
+	}
+
+	cred := f["installed"].(map[string]interface{})
+
+	cr.ID = cred["client_id"].(string)
+	cr.Secret = cred["client_secret"].(string)
+	return nil
 }

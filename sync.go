@@ -29,6 +29,7 @@ import (
 	"time"
 
 	photoslibrary "evgenykuznetsov.org/go/gphotoslibrary"
+	"evgenykuznetsov.org/go/gphotosync/internal/oauth"
 	"google.golang.org/api/googleapi"
 )
 
@@ -148,10 +149,10 @@ func (lib *Library) GetTokenPath() string {
 	return path.Join(lib.Path, ".token.json")
 }
 
-func (lib *Library) Sync(cred Credentials) error {
+func (lib *Library) Sync(cred credentials) error {
 	ctx := context.Background()
 
-	oauthClient, err := NewOAuthClient(ctx, cred.ID, cred.Secret, lib.GetTokenPath())
+	oauthClient, err := oauth.NewClient(ctx, cred.ID, cred.Secret, lib.GetTokenPath())
 	if err != nil {
 		return err
 	}

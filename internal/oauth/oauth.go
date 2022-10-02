@@ -14,7 +14,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program. If not, see <https://www.gnu.org/licenses/>.
 
-package main
+package oauth
 
 import (
 	"context"
@@ -31,12 +31,7 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
-type Credentials struct {
-	ID     string
-	Secret string
-}
-
-// NewOAuthClient creates a new http.Client with a bearer access token
+// NewOAuthToken returns a *oauth2.Token for the given credentials
 func NewOAuthToken(ctx context.Context, clientID string, clientSecret string) (*oauth2.Token, error) {
 	config := &oauth2.Config{
 		ClientID:     clientID,
@@ -74,7 +69,8 @@ func NewOAuthClientFromToken(ctx context.Context, clientID string, clientSecret 
 	return config.Client(ctx, accessToken), nil
 }
 
-func NewOAuthClient(ctx context.Context, clientID, clientSecret, tokenPath string) (*http.Client, error) {
+// NewClient returns a *http.Client ready to be worked with
+func NewClient(ctx context.Context, clientID, clientSecret, tokenPath string) (*http.Client, error) {
 	if _, err := os.Stat(tokenPath); os.IsNotExist(err) {
 		token, err := NewOAuthToken(ctx, clientID, clientSecret)
 		if err != nil {
@@ -113,23 +109,4 @@ func generateOAuthState() (string, error) {
 		return "", err
 	}
 	return fmt.Sprintf("%x", n), nil
-}
-
-func ReadSecretJSON(file string, cr *Credentials) error {
-	data, err := ioutil.ReadFile(file)
-	if err != nil {
-		return err
-	}
-
-	var f map[string]interface{}
-	err = json.Unmarshal(data, &f)
-	if err != nil {
-		return err
-	}
-
-	cred := f["installed"].(map[string]interface{})
-
-	cr.ID = cred["client_id"].(string)
-	cr.Secret = cred["client_secret"].(string)
-	return nil
 }

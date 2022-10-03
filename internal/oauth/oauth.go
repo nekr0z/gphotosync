@@ -46,7 +46,7 @@ func newToken(ctx context.Context, clientID, clientSecret, redirectURL string) (
 	}
 	authCodeURL := config.AuthCodeURL(state, oauth2.AccessTypeOffline)
 	fmt.Printf("Open the following URL in your browser:\n%s\n", authCodeURL)
-	fmt.Println("After authentication, copy the final URL from browser and paste it here:")
+	fmt.Println("After authentication, copy the final URL from the browser and paste it here:")
 
 	var uri string
 	if _, err := fmt.Scanln(&uri); err != nil {

@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Pre-release]
+
+## [0.4.0] - 2022-10-03
 ### Changed
 - use new OAuth2 flow instead of the deprecated one
 
@@ -38,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 *initial release*
 
 [Pre-release]: https://github.com/nekr0z/gphotosync/releases/tag/latest
+[0.4.0]: https://github.com/nekr0z/gphotosync/releases/tag/v0.4.0
 [0.3.4]: https://github.com/nekr0z/gphotosync/releases/tag/v0.3.4
 [0.3.3]: https://github.com/nekr0z/gphotosync/releases/tag/v0.3.3
 [0.3.2]: https://github.com/nekr0z/gphotosync/releases/tag/v0.3.2

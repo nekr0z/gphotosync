@@ -100,7 +100,7 @@ func readSecretJSON(file string, cr *credentials) error {
 		return err
 	}
 
-	cred := f["installed"].(map[string]interface{})
+	cred := f["web"].(map[string]interface{})
 
 	cr.ID = cred["client_id"].(string)
 	cr.Secret = cred["client_secret"].(string)

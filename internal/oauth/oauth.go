@@ -22,7 +22,6 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"net/http"
 	"os"
 
@@ -31,20 +30,22 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
-// NewOAuthToken returns a *oauth2.Token for the given credentials
-func NewOAuthToken(ctx context.Context, clientID string, clientSecret string) (*oauth2.Token, error) {
+const redirectURL = "http://127.0.0.1:8088"
+
+// newToken returns a *oauth2.Token for the given credentials
+func newToken(ctx context.Context, clientID string, clientSecret string) (*oauth2.Token, error) {
 	config := &oauth2.Config{
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
 		Endpoint:     google.Endpoint,
 		Scopes:       []string{photoslibrary.PhotoslibraryScope},
-		RedirectURL:  "urn:ietf:wg:oauth:2.0:oob",
+		RedirectURL:  redirectURL,
 	}
 	state, err := generateOAuthState()
 	if err != nil {
 		return nil, err
 	}
-	authCodeURL := config.AuthCodeURL(state)
+	authCodeURL := config.AuthCodeURL(state, oauth2.AccessTypeOffline)
 	fmt.Printf("Open %s\n", authCodeURL)
 	fmt.Print("Enter code: ")
 
@@ -56,14 +57,14 @@ func NewOAuthToken(ctx context.Context, clientID string, clientSecret string) (*
 	return config.Exchange(ctx, authCode)
 }
 
-// NewOAuthClientFromToken creates a new http.Client with a bearer access token
-func NewOAuthClientFromToken(ctx context.Context, clientID string, clientSecret string, accessToken *oauth2.Token) (*http.Client, error) {
+// newClientFromToken creates a new http.Client with a bearer access token
+func newClientFromToken(ctx context.Context, clientID string, clientSecret string, accessToken *oauth2.Token) (*http.Client, error) {
 	config := &oauth2.Config{
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
 		Endpoint:     google.Endpoint,
 		Scopes:       []string{photoslibrary.PhotoslibraryScope},
-		RedirectURL:  "urn:ietf:wg:oauth:2.0:oob",
+		RedirectURL:  redirectURL,
 	}
 
 	return config.Client(ctx, accessToken), nil
@@ -72,7 +73,7 @@ func NewOAuthClientFromToken(ctx context.Context, clientID string, clientSecret 
 // NewClient returns a *http.Client ready to be worked with
 func NewClient(ctx context.Context, clientID, clientSecret, tokenPath string) (*http.Client, error) {
 	if _, err := os.Stat(tokenPath); os.IsNotExist(err) {
-		token, err := NewOAuthToken(ctx, clientID, clientSecret)
+		token, err := newToken(ctx, clientID, clientSecret)
 		if err != nil {
 			return nil, err
 		}
@@ -82,14 +83,14 @@ func NewClient(ctx context.Context, clientID, clientSecret, tokenPath string) (*
 			return nil, err
 		}
 
-		err = ioutil.WriteFile(tokenPath, data, 0600)
+		err = os.WriteFile(tokenPath, data, 0600)
 		if err != nil {
 			return nil, err
 		}
 
-		return NewOAuthClientFromToken(ctx, clientID, clientSecret, token)
+		return newClientFromToken(ctx, clientID, clientSecret, token)
 	} else {
-		data, err := ioutil.ReadFile(tokenPath)
+		data, err := os.ReadFile(tokenPath)
 		if err != nil {
 			return nil, err
 		}
@@ -99,7 +100,7 @@ func NewClient(ctx context.Context, clientID, clientSecret, tokenPath string) (*
 			return nil, err
 		}
 		fmt.Printf("read a token from \"%s\": %s %s\n", tokenPath, clientID, clientSecret)
-		return NewOAuthClientFromToken(ctx, clientID, clientSecret, token)
+		return newClientFromToken(ctx, clientID, clientSecret, token)
 	}
 }
 

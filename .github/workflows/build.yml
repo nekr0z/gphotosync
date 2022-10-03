@@ -40,5 +40,5 @@ jobs:
           GOOS=${{ matrix.goos }}
           GOARCH=${{ matrix.goarch }}
           CGO_ENABLED=0
-          go build -ldflags "-s -w -buildid= -X main.version=$VER -X main.googleClientId=${{ secrets.CLIENT_ID_WEB }} -X main.googleClientSecret=${{ secrets.CLIENT_SECRET_WEB }}"
+          go build -ldflags "-s -w -buildid= -X main.version=$VER -X main.googleClientId=${{ secrets.CLIENT_ID }} -X main.googleClientSecret=${{ secrets.CLIENT_SECRET }}"
           echo "successful build for" $GOOS $GOARCH

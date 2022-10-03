@@ -30,10 +30,8 @@ import (
 	"golang.org/x/oauth2/google"
 )
 
-const redirectURL = "http://127.0.0.1:8088"
-
 // newToken returns a *oauth2.Token for the given credentials
-func newToken(ctx context.Context, clientID string, clientSecret string) (*oauth2.Token, error) {
+func newToken(ctx context.Context, clientID, clientSecret, redirectURL string) (*oauth2.Token, error) {
 	config := &oauth2.Config{
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
@@ -58,7 +56,7 @@ func newToken(ctx context.Context, clientID string, clientSecret string) (*oauth
 }
 
 // newClientFromToken creates a new http.Client with a bearer access token
-func newClientFromToken(ctx context.Context, clientID string, clientSecret string, accessToken *oauth2.Token) (*http.Client, error) {
+func newClientFromToken(ctx context.Context, clientID, clientSecret, redirectURL string, accessToken *oauth2.Token) (*http.Client, error) {
 	config := &oauth2.Config{
 		ClientID:     clientID,
 		ClientSecret: clientSecret,
@@ -71,9 +69,9 @@ func newClientFromToken(ctx context.Context, clientID string, clientSecret strin
 }
 
 // NewClient returns a *http.Client ready to be worked with
-func NewClient(ctx context.Context, clientID, clientSecret, tokenPath string) (*http.Client, error) {
+func NewClient(ctx context.Context, clientID, clientSecret, redirectURL, tokenPath string) (*http.Client, error) {
 	if _, err := os.Stat(tokenPath); os.IsNotExist(err) {
-		token, err := newToken(ctx, clientID, clientSecret)
+		token, err := newToken(ctx, clientID, clientSecret, redirectURL)
 		if err != nil {
 			return nil, err
 		}
@@ -88,7 +86,7 @@ func NewClient(ctx context.Context, clientID, clientSecret, tokenPath string) (*
 			return nil, err
 		}
 
-		return newClientFromToken(ctx, clientID, clientSecret, token)
+		return newClientFromToken(ctx, clientID, clientSecret, redirectURL, token)
 	} else {
 		data, err := os.ReadFile(tokenPath)
 		if err != nil {
@@ -99,8 +97,8 @@ func NewClient(ctx context.Context, clientID, clientSecret, tokenPath string) (*
 		if err != nil {
 			return nil, err
 		}
-		fmt.Printf("read a token from \"%s\": %s %s\n", tokenPath, clientID, clientSecret)
-		return newClientFromToken(ctx, clientID, clientSecret, token)
+		fmt.Printf("read a token from \"%s\": %s %s (%s)\n", tokenPath, clientID, clientSecret, redirectURL)
+		return newClientFromToken(ctx, clientID, clientSecret, redirectURL, token)
 	}
 }
 

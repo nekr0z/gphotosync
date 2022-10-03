@@ -35,6 +35,8 @@ var (
 	version            string = "custom-build"
 )
 
+const defaultRedirectURL = "http://127.0.0.1:8088"
+
 func main() {
 	localLibArg := flag.String("lib", "", "local library path")
 	dedup := flag.String("strategy", "unixhex", "filename deduplication strategy: [unixhex|id]")
@@ -55,8 +57,9 @@ func main() {
 
 	// if .client_secret.json exists in local lib path, use those credentials
 	cred := credentials{
-		ID:     googleClientId,
-		Secret: googleClientSecret,
+		ID:          googleClientId,
+		Secret:      googleClientSecret,
+		RedirectURL: defaultRedirectURL,
 	}
 	err := readSecretJSON(path.Join(*localLibArg, ".client_secret.json"), &cred)
 	if err != nil {
@@ -83,8 +86,9 @@ func main() {
 }
 
 type credentials struct {
-	ID     string
-	Secret string
+	ID          string
+	Secret      string
+	RedirectURL string
 }
 
 // readSecretJSON reads the saved credentials from a JSON file
@@ -104,5 +108,10 @@ func readSecretJSON(file string, cr *credentials) error {
 
 	cr.ID = cred["client_id"].(string)
 	cr.Secret = cred["client_secret"].(string)
+	uris := cred["redirect_uris"].([]interface{})
+	if len(uris) == 1 {
+		uri := uris[0].(string)
+		cr.RedirectURL = uri
+	}
 	return nil
 }

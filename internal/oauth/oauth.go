@@ -1,5 +1,5 @@
 // Copyright (C) 2018  denis4net
-// Copyright (C) 2019 Evgeny Kuznetsov (evgeny@kuznetsov.md)
+// Copyright (C) 2019-2022 Evgeny Kuznetsov (evgeny@kuznetsov.md)
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -23,6 +23,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"os"
 
 	photoslibrary "evgenykuznetsov.org/go/gphotoslibrary"
@@ -44,13 +45,24 @@ func newToken(ctx context.Context, clientID, clientSecret, redirectURL string) (
 		return nil, err
 	}
 	authCodeURL := config.AuthCodeURL(state, oauth2.AccessTypeOffline)
-	fmt.Printf("Open %s\n", authCodeURL)
-	fmt.Print("Enter code: ")
+	fmt.Printf("Open the following URL in your browser:\n%s\n", authCodeURL)
+	fmt.Println("After authentication, copy the final URL from browser and paste it here:")
 
-	var authCode string
-	if _, err := fmt.Scanln(&authCode); err != nil {
+	var uri string
+	if _, err := fmt.Scanln(&uri); err != nil {
 		return nil, err
 	}
+
+	u, err := url.Parse(uri)
+	if err != nil {
+		return nil, err
+	}
+	q := u.Query()
+	st := q.Get("state")
+	if st != state {
+		return nil, fmt.Errorf("state mismatch")
+	}
+	authCode := q.Get("code")
 
 	return config.Exchange(ctx, authCode)
 }
